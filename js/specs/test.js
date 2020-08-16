@@ -9,7 +9,7 @@ import {
   convertMinutes,
   addTripInfoToDrivers,
 } from "../app.js";
-import { FileHelper } from "./components/FileHelper.js";
+import { FileHelper } from "../components/FileHelper.js";
 
 const line1 = "Driver Dan";
 const line2 = "Driver Lauren";
@@ -17,6 +17,24 @@ const line4 = "Trip Dan 07:15 07:45 17.3";
 
 const driver = createObjectFromCommandLine(line1);
 const trip = createObjectFromCommandLine(line4);
+
+describe("FileHelper should pull the text from the text file", () => {
+  const fh = new FileHelper();
+  const result = fh.readStringFromFileAtPath("test-input.txt");
+  const array = result.split(/\n/);
+
+  it("Result should read test then test2 on a new line", () => {
+    expect(result).toBe(`test\ntest2`);
+  });
+
+  it("Result should separate each new line into array, line 1 (array index 0) should be test", () => {
+    expect(array[0]).toBe("test");
+  });
+
+  it("Result should separate each new line into array, line 2 (array index 1) should be test2", () => {
+    expect(array[1]).toBe("test2");
+  });
+});
 
 describe("Driver should have name", () => {
   it("Driver1 name should be Dan", () => {
@@ -59,12 +77,29 @@ describe("Create objects from command lines", () => {
   });
 });
 
-describe("FileHelper should pull the text from the text file", () => {
-  const fh = new FileHelper();
-  const result = fh.readStringFromFileAtPath("test-input.txt");
+describe("All drivers and trips should be added to array", () => {
+  it("First driver should be Lauren", () => {
+    expect(drivers[0].name).toBe("Lauren");
+  });
 
-  it("Result should read test", () => {
-    expect(result).toBe("test");
+  it("Second driver should be Dan", () => {
+    expect(drivers[1].name).toBe("Dan");
+  });
+
+  it("Third driver should be Kumi", () => {
+    expect(drivers[2].name).toBe("Kumi");
+  });
+
+  it("First trip should have 17.3 miles", () => {
+    expect(trips[0].milesDriven).toBe("17.3");
+  });
+
+  it("Second trip should have 21.8 miles", () => {
+    expect(trips[1].milesDriven).toBe("21.8");
+  });
+
+  it("Third trip should have 42.0 miles", () => {
+    expect(trips[2].milesDriven).toBe("42.0");
   });
 });
 

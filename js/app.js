@@ -5,12 +5,14 @@ import { FileHelper } from "./components/FileHelper.js";
 export let drivers = [];
 export let trips = [];
 
+const textFileToRead = "input.txt";
+
+const lines = convertTextFileToCommandLines();
+
+function convertTextFileToCommandLines() {
+
 const fh = new FileHelper();
-const input = fh.readStringFromFileAtPath("../input.txt");
-
-const lines = convertTextFileToCommandLines(input);
-
-function convertTextFileToCommandLines(input) {
+const input = fh.readStringFromFileAtPath("../" + textFileToRead);
   return input.split(/\n/);
 }
 
