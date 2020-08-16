@@ -1,28 +1,20 @@
 import { Driver } from "./components/Driver.js";
 import { Trip } from "./components/Trip.js";
+import { FileHelper } from "./components/FileHelper.js";
 
 export let drivers = [];
 export let trips = [];
 
-export const line1 = "Driver Dan";
-export const line2 = "Driver Lauren";
-const line3 = "Driver Kumi";
-export const line4 = "Trip Dan 07:15 07:45 17.3";
-const line5 = "Trip Dan 06:12 06:32 21.8";
-const line6 = "Trip Lauren 12:01 13:16 42.0";
+const fh = new FileHelper();
+const input = fh.readStringFromFileAtPath("../input.txt");
 
-const lines = [line1, line2, line3, line4, line5, line6];
+const lines = convertTextFileToCommandLines(input);
+
+function convertTextFileToCommandLines(input) {
+  return input.split(/\n/);
+}
 
 export function runApp() {
-  const line1 = "Driver Dan";
-  const line2 = "Driver Lauren";
-  const line3 = "Driver Kumi";
-  const line4 = "Trip Dan 07:15 07:45 17.3";
-  const line5 = "Trip Dan 06:12 06:32 21.8";
-  const line6 = "Trip Lauren 12:01 13:16 42.0";
-
-  const lines = [line1, line2, line3, line4, line5, line6];
-
   lines.forEach((line) => {
     const object = createObjectFromCommandLine(line);
     sortObject(object);

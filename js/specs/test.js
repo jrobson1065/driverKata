@@ -2,9 +2,6 @@ import { Driver } from "../components/Driver.js";
 import { Trip } from "../components/Trip.js";
 import {
   createObjectFromCommandLine,
-  line1,
-  line2,
-  line4,
   sortObject,
   drivers,
   trips,
@@ -12,6 +9,11 @@ import {
   convertMinutes,
   addTripInfoToDrivers,
 } from "../app.js";
+import { FileHelper } from "./components/FileHelper.js";
+
+const line1 = "Driver Dan";
+const line2 = "Driver Lauren";
+const line4 = "Trip Dan 07:15 07:45 17.3";
 
 const driver = createObjectFromCommandLine(line1);
 const trip = createObjectFromCommandLine(line4);
@@ -54,6 +56,15 @@ describe("Create objects from command lines", () => {
   });
   it("Command should return a Trip Object with field miles driven 17.3", () => {
     expect(trip.milesDriven).toBe("17.3");
+  });
+});
+
+describe("FileHelper should pull the text from the text file", () => {
+  const fh = new FileHelper();
+  const result = fh.readStringFromFileAtPath("test-input.txt");
+
+  it("Result should read test", () => {
+    expect(result).toBe("test");
   });
 });
 
