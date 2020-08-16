@@ -6,7 +6,7 @@ All tests are written to fail first, then they are corrected to pass.
 ## Importing a .txt file
 This project uses a simple XML HTTP request to pull text from the `input.txt` file. By default, the app reads the file called `input.txt`. You can either replace `input.txt` with a new file or update `Line 8` in `app.js` to the name of your file.
 
-The file to be read needs to be added to the directory.
+The file to be read needs to be added to the directory. I chose this method to create an easy to process version of this app as opposed to installing `node.js` and using the file reader. I wanted the app to be clean and vanilla and friendly for both the user and the reviewer.
 
 ## Running the App
 After importing an `input.txt` file, open the `index.html` file in the live server and view the console to see the output.

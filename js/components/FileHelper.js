@@ -1,9 +1,9 @@
 export class FileHelper {
-  readStringFromFileAtPath = function (pathOfFileToReadFrom) {
-    var request = new XMLHttpRequest();
-    request.open("GET", pathOfFileToReadFrom, false);
+  readStringFromFileAtPath = function (path) {
+    const request = new XMLHttpRequest();
+    request.open("GET", path, false);
     request.send(null);
-    var returnValue = request.responseText;
+    const returnValue = request.responseText;
 
     return returnValue;
   };

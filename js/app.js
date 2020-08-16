@@ -10,9 +10,8 @@ const textFileToRead = "input.txt";
 const lines = convertTextFileToCommandLines();
 
 function convertTextFileToCommandLines() {
-
-const fh = new FileHelper();
-const input = fh.readStringFromFileAtPath("../" + textFileToRead);
+  const fh = new FileHelper();
+  const input = fh.readStringFromFileAtPath("../" + textFileToRead);
   return input.split(/\n/);
 }
 
