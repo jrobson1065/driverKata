@@ -1,36 +1,30 @@
+import { convertMinutes } from "../app.js";
+
 export class Driver {
-    constructor(name) {
-        this.name = name;
-        this.mins = 0;
-        this.miles = 0;
-        this.mph = 0;
-    }
+  constructor(name) {
+    this.name = name;
+    this.minutes = 0;
+    this.miles = 0;
+    this.mph = 0;
+  }
 
-    addTripInfo(trip) {
-        const mins = this.convertMinutes(trip.endTime) - this.convertMinutes(trip.startTime);
-        this.addMins(mins);
-        this.addMiles(trip.milesDriven);
-        this.updateMPH();
-    }
+  addTrip(trip) {
+    const minutes =
+      convertMinutes(trip.endTime) - convertMinutes(trip.startTime);
+    this.addMinutes(minutes);
+    this.addMiles(trip.milesDriven);
+    this.updateMph();
+  }
 
-    convertMinutes(time) {
-        const hours = parseInt(time.split(":")[0], 10);
-        let mins = parseInt(time.split(":")[1], 10);
+  addMinutes(minutes) {
+    this.minutes += minutes;
+  }
 
-        mins += hours * 60;
+  addMiles(miles) {
+    this.miles += parseFloat(miles, 10);
+  }
 
-        return mins;
-    }
-
-    addMins(mins) {
-        this.mins += mins;
-    }
-
-    addMiles(miles) {
-        this.miles += parseFloat(miles, 10);
-    }
-
-    updateMPH() {
-        this.mph = Math.round(this.miles / (this.mins / 60));
-    }
+  updateMph() {
+    this.mph = this.miles / (this.minutes / 60);
+  }
 }

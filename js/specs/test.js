@@ -1,34 +1,37 @@
-import { Driver } from "../components/Driver.js";
-import { Trip } from "../components/Trip.js";
 import {
-  createObjectFromCommandLine,
-  sortObject,
+  createInstanceFromCommandLine,
+  sortInstance,
   drivers,
   trips,
   getMPH,
   convertMinutes,
   addTripInfoToDrivers,
+  fileHelper,
+  convertTextFileToCommandLines,
+  isMac,
 } from "../app.js";
-import { FileHelper } from "../components/FileHelper.js";
 
 const line1 = "Driver Dan";
 const line2 = "Driver Lauren";
 const line4 = "Trip Dan 07:15 07:45 17.3";
 
-const driver = createObjectFromCommandLine(line1);
-const trip = createObjectFromCommandLine(line4);
+const driver = createInstanceFromCommandLine(line1);
+const trip = createInstanceFromCommandLine(line4);
 
 describe("FileHelper should pull the text from the text file", () => {
-  const fh = new FileHelper();
-  const result = fh.readStringFromFileAtPath("test-input.txt");
-  const array = result.split(/\n/);
+  const result = fileHelper.readStringFromFileAtPath("test-input.txt");
+  const array = convertTextFileToCommandLines("test-input.txt");
 
   it("Result should read test then test2 on a new line", () => {
-    expect(result).toBe(`test\ntest2`);
+    if (isMac) {
+      expect(result).toBe("test1\ntest2");
+    } else {
+      expect(result).toBe("test1\r\ntest2");
+    }
   });
 
   it("Result should separate each new line into array, line 1 (array index 0) should be test", () => {
-    expect(array[0]).toBe("test");
+    expect(array[0]).toBe("test1");
   });
 
   it("Result should separate each new line into array, line 2 (array index 1) should be test2", () => {
@@ -38,41 +41,43 @@ describe("FileHelper should pull the text from the text file", () => {
 
 describe("Driver should have name", () => {
   it("Driver1 name should be Dan", () => {
-    const driver1 = new Driver("Dan");
-    expect(driver1.name).toBe("Dan");
+    expect(driver.name).toBe("Dan");
   });
 });
 
 describe("Trip should have all fields", () => {
-  const trip1 = new Trip("Dan", "07:15", "07:45", "17.3");
-  it("Trip1 driver should be Dan", () => {
-    expect(trip1.driver).toBe("Dan");
+  it("Trip driver should be Dan", () => {
+    expect(trip.driver).toBe("Dan");
   });
-  it("Trip1 start time should be 07:15", () => {
-    expect(trip1.startTime).toBe("07:15");
+  it("Trip start time should be 07:15", () => {
+    expect(trip.startTime).toBe("07:15");
   });
-  it("Trip1 end time should be 07:45", () => {
-    expect(trip1.endTime).toBe("07:45");
+  it("Trip end time should be 07:45", () => {
+    expect(trip.endTime).toBe("07:45");
   });
-  it("Trip1 miles driven should be 17.3", () => {
-    expect(trip1.milesDriven).toBe("17.3");
+  it("Trip miles driven should be 17.3", () => {
+    expect(trip.milesDriven).toBe("17.3");
   });
 });
 
-describe("Create objects from command lines", () => {
-  it("Command should return a Driver Object with field name Dan", () => {
+describe("Create instances from command lines", () => {
+  it("Command should return a Driver instance with field name Dan", () => {
     expect(driver.name).toBe("Dan");
   });
-  it("Command should return a Trip Object with field driver Dan", () => {
+
+  it("Command should return a Trip instance with field driver Dan", () => {
     expect(trip.driver).toBe("Dan");
   });
-  it("Command should return a Trip Object with field start time 07:15", () => {
+
+  it("Command should return a Trip instance with field start time 07:15", () => {
     expect(trip.startTime).toBe("07:15");
   });
-  it("Command should return a Trip Object with field end time 07:45", () => {
+
+  it("Command should return a Trip instance with field end time 07:45", () => {
     expect(trip.endTime).toBe("07:45");
   });
-  it("Command should return a Trip Object with field miles driven 17.3", () => {
+
+  it("Command should return a Trip instance with field miles driven 17.3", () => {
     expect(trip.milesDriven).toBe("17.3");
   });
 });
@@ -103,13 +108,13 @@ describe("All drivers and trips should be added to array", () => {
   });
 });
 
-describe("Trip objects should add data to Driver instance", () => {
-  it("Driver miles should be updated with trip info", () => {
-    if (driver.name === trip.driver) driver.addTripInfo(trip);
+describe("App should add trips to array of trips", () => {
+  it("Should have 3 Drivers in array of Drivers, no extra Drivers should exist beyond the 3 we checked above", () => {
+    expect(drivers.length).toBe(3);
+  });
 
-    let miles = parseFloat(driver.miles, 10);
-
-    expect(miles).toBe(17.3);
+  it("Should have 3 Trips in array of Trips, no extra Trips should exist beyond the 3 we checked above", () => {
+    expect(trips.length).toBe(3);
   });
 });
 
@@ -121,38 +126,41 @@ describe("Should convert time and return MPH", () => {
 
   it("Trip should return 60mph", () => {
     const line = "Trip Dan 01:00 02:00 60";
-    const newTrip = createObjectFromCommandLine(line);
+    const newTrip = createInstanceFromCommandLine(line);
     const mph = getMPH(newTrip);
     expect(mph).toBe(60);
   });
 });
 
-describe("App should add trips to array of trips", () => {
-  it("Should have at least 3 Drivers in array of Drivers", () => {
-    expect(drivers.length).toBeGreaterThanOrEqual(3);
+describe("Trip instances should add data to Driver instance", () => {
+  driver.addTrip(trip);
+  it("Driver miles should be updated with trip info", () => {
+    const miles = driver.miles;
+    expect(miles).toBe(17.3);
   });
 
-  it("Should have at least 3 Trips in array of Trips", () => {
-    expect(trips.length).toBeGreaterThanOrEqual(3);
+  it("driver mph should be updated with trip info", () => {
+    const mph = Math.round(driver.mph);
+    expect(mph).toBe(35);
   });
 });
 
 describe("Trips under 5mph and over 100mph should not be added", () => {
-  const driver2 = createObjectFromCommandLine(line2);
+  const driver2 = createInstanceFromCommandLine(line2);
 
   it("Trip under 5mph should not be added, Lauren's miles should be 0", () => {
-    const line = "Trip Lauren 01:00 02:00 3";
-    const newTrip = createObjectFromCommandLine(line);
-    sortObject(newTrip);
+    const line = "Trip Lauren 01:00 02:00 3.0";
+    const newTrip = createInstanceFromCommandLine(line);
+    sortInstance(newTrip);
     addTripInfoToDrivers();
 
     expect(driver2.miles).toBe(0);
   });
 
   it("Trip over 100mph should not be added, Lauren's miles should be 0", () => {
-    const line = "Trip Lauren 01:00 02:00 105";
-    const newTrip = createObjectFromCommandLine(line);
-    sortObject(newTrip);
+    const line = "Trip Lauren 01:00 02:00 105.0";
+    const newTrip = createInstanceFromCommandLine(line);
+    sortInstance(newTrip);
     addTripInfoToDrivers();
 
     expect(driver2.miles).toBe(0);
